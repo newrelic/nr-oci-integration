@@ -1,0 +1,20 @@
+[{
+    "namespace": "oci_vcn",
+    "resourceGroup": null,
+    "compartmentId": "ocid1.compartment.oc1...",
+    "name": "VnicFromNetworkBytes",
+    "dimensions": {
+        "resourceId": "ocid1.vnic.oc1.phx..."
+    },
+    "metadata": {
+        "displayName": "Bytes from Network",
+        "unit": "bytes"
+    },
+    "datapoints": [
+        {
+            "timestamp": 1731689988000,
+            "value": 5780.0,
+            "count": 1
+        }
+    ]
+}]

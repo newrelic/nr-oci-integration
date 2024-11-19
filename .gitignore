@@ -1,0 +1,11 @@
+.DS_Store
+.project
+.classpath
+.settings
+target
+*.pyc
+.idea/
+**/__pycache__/**
+venv/
+.terraform*
+terraform.tfstate*

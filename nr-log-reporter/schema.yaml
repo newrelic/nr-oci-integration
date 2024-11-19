@@ -1,0 +1,124 @@
+# Title shown in Application Information tab.
+title: NewRelic OCI Logs
+# Sub Title shown in Application Information tab.
+description: Send OCI Logs to New Relic
+schemaVersion: 1.1.0
+version: 1.0
+locale: en
+variableGroups:
+  - title: "Tenancy"
+    variables:
+      - ${tenancy_ocid}
+      - ${region}
+      - ${compartment_ocid}
+  - title: "New Relic Configuration"
+    variables:
+      - ${newrelic_api_key}
+      - ${newrelic_endpoint}
+  - title: "Logging Configuration"
+    variables:
+      - ${log_group_id}
+      - ${log_id}
+  - title: "Network Options"
+    variables:
+      - ${create_vcn}
+      - ${vcnCompartment}
+      - ${existingVcn}
+      - ${function_subnet_id}
+  - title: "Function Settings"
+    variables:
+      - ${function_app_shape}
+      - ${function_image_path}
+      - ${oci_docker_username}
+      - ${oci_docker_password}
+
+variables:
+  resource_name_prefix:
+    type: string
+    title: Resource prefix
+    description: The prefix for the name of all of the resources.
+    required: true
+    default: newrelic-logs
+  create_vcn:
+    title: Create VCN
+    description: Optional variable to create virtual network for the setup. Otherwise, choose an existing subnet from VCN
+    type: boolean
+    default: true
+
+# VCN
+  vcnCompartment:
+    # prepopulates available values for compartment
+    type: oci:identity:compartment:id
+  existingVcn:
+    type: oci:core:vcn:id
+    dependsOn:
+      compartmentId: ${vcnCompartment}
+  function_subnet_id:
+    title: Function Subnet OCID
+    type: oci:core:subnet:id
+    description: The OCID of the subnet to be used for the function app. Required if not creating the VCN.
+    required: false
+    dependsOn:
+      compartmentId: ${vcnCompartment}
+      vcnId: ${existingVcn}
+
+# NewRelic Environment
+  newrelic_api_key:
+    title: New Relic API Key
+    type: string
+    description: The Ingest API key for sending metrics to newrelic endpoints.
+    required: true
+    sensitive: true
+    password: true
+    confirmation: true
+  newrelic_endpoint:
+    title: New Relic Logs Endpoint
+    type: enum
+    description: The endpoint to hit for sending logs. Varies by region.
+    required: true
+    default: https://log-api.newrelic.com/log/v1
+    enum:
+      - https://log-api.newrelic.com/log/v1
+      - https://log-api.eu.newrelic.com/log/v1
+    allowMultiple: false
+
+  #Logging Environment
+  log_group_id:
+    title: Log Group OCID
+    type: string
+    description: The OCID of the Log Group that contains the logs to be forwarded to New Relic.
+    required: true
+  log_id:
+    title: Log OCID
+    type: string
+    description: The OCID of the Log file to be forwarded to New Relic.
+    required: true
+
+  # Function setup
+  function_app_shape:
+    title: Function Application shape
+    type: enum
+    description: The shape of the function application. The docker image should be built accordingly. Use GENERIC_ARM if using Oracle Resource managaer stack.
+    required: true
+    enum:
+      - GENERIC_ARM
+      - GENERIC_X86
+      - GENERIC_X86_ARM
+    default: GENERIC_ARM
+  function_image_path:
+    title: Function Image Path
+    type: string
+    description: The full path of the function image. The image should be present in the container registry for the region and be compatible with the function application shape.
+    required: false
+  oci_docker_username:
+    title: OCI Docker registry user name
+    type: string
+    description: The user login for the OCI docker container registry to push function image. Not required if using an existing image path.
+    required: false
+    sensitive: true
+  oci_docker_password:
+    title: OCI Docker registry password
+    type: password
+    description: The user password for the OCI docker container registry. Typically this is a user auth token.
+    required: false
+    sensitive: true
