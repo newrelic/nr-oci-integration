@@ -32,7 +32,7 @@ Allow dynamic-group <GROUP_NAME> to use fn-function in tenancy
 Allow dynamic-group <GROUP_NAME> to use fn-invocation in tenancy
 ```
 
-[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/newrelic/nr-oci-integration/releases/latest/download/policy-orm-setup.zip)
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/newrelic/nr-oci-integration/releases/latest/download/policy-orm-setup.zip)
 
 To create this stack in the OCI Portal:
 
@@ -57,7 +57,7 @@ After the policy stack is successfully created, create the Metrics stack, which 
 * Function Application that contains the `metrics-function` to forward metrics. The Docker image is deployed to or pulled from the Container Registry.
 * Service Connector that routes metrics to the Function Application
 
-[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/newrelic/nr-oci-integration/releases/latest/download/nr-metric-reporter.zip)
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/newrelic/nr-oci-integration/releases/latest/download/nr-metric-reporter.zip)
 
 To create this stack in the OCI Portal:
 
@@ -137,7 +137,7 @@ For more information on OCI Logs, see [Enabling Logging for a Resource](https://
 
 #### Logging Stack
 
-[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/newrelic/nr-oci-integration/releases/latest/download/nr-log-reporter.zip)
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/newrelic/nr-oci-integration/releases/latest/download/nr-log-reporter.zip)
 
 See [Metrics Stack](#metrics-stack) for installation/configuration details - The logging stack config is virtually the same, except for the following differences:
 
