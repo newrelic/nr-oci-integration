@@ -32,6 +32,8 @@ Allow dynamic-group <GROUP_NAME> to use fn-function in tenancy
 Allow dynamic-group <GROUP_NAME> to use fn-invocation in tenancy
 ```
 
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/newrelic/nr-oci-integration/releases/latest/download/policy-orm-setup.zip)
+
 To create this stack in the OCI Portal:
 
 1. Download the latest release in this repo & unzip
@@ -40,7 +42,7 @@ To create this stack in the OCI Portal:
 4. Under *Stack configuration* select `Browse`
 5. Select the entire `policy-orm-setup` directory & *Upload*
 6. Optionally modify the name, description, compartment, and tags. Leave the option to use custom Terraform providers *unchecked*. Select *Next*
-7. Name the dynamic group, user group, and policy to be created, or use the default names provided
+7. Name the dynamic group and policy to be created, or use the default names provided
 8. Provide the name of the domain of the user running the stack. The default domain name is `Default`
 9. Ensure that the *home region* of the tenancy is selected
 10. Click Next -> Create to create stack.
@@ -54,6 +56,8 @@ After the policy stack is successfully created, create the Metrics stack, which 
 * Application that contains a function
 * Function Application that contains the `metrics-function` to forward metrics. The Docker image is deployed to or pulled from the Container Registry.
 * Service Connector that routes metrics to the Function Application
+
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/newrelic/nr-oci-integration/releases/latest/download/nr-metric-reporter.zip)
 
 To create this stack in the OCI Portal:
 
@@ -133,17 +137,19 @@ For more information on OCI Logs, see [Enabling Logging for a Resource](https://
 
 #### Logging Stack
 
-See [Metrics Stack](###metrics-stack) for installation/configuration details - The logging stack config is virtually the same, except for the following differences:
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/newrelic/nr-oci-integration/releases/latest/download/nr-log-reporter.zip)
 
-* In step 5 under [Metrics Stack](###metrics-stack), select `nr-logs-reporter` directory instead.
-* In addition to the configuration sections under [Metrics Stack](###metrics-stack), an additional configuration section `Logging Configuration` is required below.
+See [Metrics Stack](#metrics-stack) for installation/configuration details - The logging stack config is virtually the same, except for the following differences:
+
+* In step 5 under [Metrics Stack](#metrics-stack), select `nr-logs-reporter` directory instead.
+* In addition to the configuration sections under [Metrics Stack](#metrics-stack), an additional configuration section `Logging Configuration` is required below.
 
 ##### Logging Configuration
 
 | Input | Type | Required | Description
 | ----- | ---- | -------- | -----------
 | Log Group OCID | string | TRUE | The OCID of the Log Group containing the logs to be forwarded.
-| Log OCID | string | FALSE | The OCID of the Log file to be forwarded.
+| Log OCID | string | TRUE | The OCID of the Log file to be forwarded.
 
 
 Once the stack is created and resources are generated successfully, navigate to the New Relic portal under *Logs* to view logs.
