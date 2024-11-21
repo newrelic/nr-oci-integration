@@ -148,6 +148,12 @@ def get_metric_tags_nr(log_record: dict):
 
         result[tag] = value
 
+    #standard NR metadata
+    result['instrumentation.name'] = 'oci-metric-reporter'
+    result['instrumentation.provider'] = 'newrelic-labs'
+    result['instrumentation.version'] = '0.0.2'
+    result['collector.name'] = 'nr-oci-integration'
+
     return result
 
 def get_metric_tag_set():

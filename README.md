@@ -45,7 +45,7 @@ To create this stack in the OCI Portal:
 7. Name the dynamic group and policy to be created, or use the default names provided
 8. Provide the name of the domain of the user running the stack. The default domain name is `Default`
 9. Ensure that the *home region* of the tenancy is selected
-10. Click Next -> Create to create stack.
+10. Click _Next -> Create_ to create stack.
 
 
 #### Metrics Stack
@@ -73,7 +73,7 @@ To create this stack in the OCI Portal:
 
 | Input | Type | Required | Description
 | ----- | ---- | -------- | -----------
-| New Relic API Key | string | TRUE | [New Relic Ingest Key] used to forward metrics.
+| New Relic API Key | string | TRUE | New Relic Ingest Key used to forward metrics.
 | New Relic Metric Endpoint | enum | TRUE | New Relic endpoint to forward metrics to. Either US or EU endpoint.
 
 ##### Network Options
