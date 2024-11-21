@@ -20,6 +20,7 @@ resource "oci_sch_service_connector" "logs_service_connector" {
     kind = "functions"
 
     #Optional
+    batch_size_in_kbs = 1000
     batch_time_in_sec = 60
     compartment_id    = var.tenancy_ocid
     function_id       = oci_functions_function.logs_function.id

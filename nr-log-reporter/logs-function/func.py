@@ -40,11 +40,23 @@ def handler(ctx, data: io.BytesIO=None):
         logs = json.loads(data.getvalue())
 
         for item in logs:
-            send_to_nr(item)
+            final_log = add_nr_metadata(item)
+            send_to_nr(final_log)
 
     except (Exception, ValueError) as ex:
         logging.getLogger().info(str(ex))
         return
+
+def add_nr_metadata(payload: dict):
+    nr_metadata = {
+      "instrumentation.name": "oci-log-reporter",
+      "instrumentation.provider": "newrelic-labs",
+      "instrumentation.version": "0.0.2",
+      "collector.name": "nr-oci-integration"
+    }
+    payload["attributes"] = nr_metadata
+
+    return payload
 
 def compress_payload(payload: dict):
     try:
@@ -103,9 +115,9 @@ def local_test_mode(filename):
         logs = json.loads(data)
 
         for log in logs:
-            print(log)
             logging.getLogger().debug(json.dumps(log, indent=4))
-            send_to_nr(log)
+            final_log = add_nr_metadata(log)
+            send_to_nr(final_log)
 
     logging.getLogger().info("local testing completed")
 
