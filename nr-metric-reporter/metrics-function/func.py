@@ -28,7 +28,7 @@ metric_tag_set = set()
 is_tracing = os.getenv('ENABLE_TRACING', "False")
 
 # Set all registered loggers to the configured log_level
-logging_level = os.getenv('LOGGING_LEVEL', 'DEBUG')
+logging_level = os.getenv('LOGGING_LEVEL', 'INFO')
 loggers = [logging.getLogger()] + [logging.getLogger(name) for name in logging.root.manager.loggerDict]
 [logger.setLevel(logging.getLevelName(logging_level)) for logger in loggers]
 
