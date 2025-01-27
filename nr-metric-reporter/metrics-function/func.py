@@ -9,28 +9,26 @@ from datetime import datetime
 from newrelic_telemetry_sdk import GaugeMetric, MetricClient
 
 # Use OCI Application or Function configurations to override these environment variable defaults.
+# These are defined in the func.yaml file or on the OCI Function Environment Settings
 
 # nr_metric_endpoint overrides the default metric API endpoint.
-# This is defined in the func.yaml file or on the OCI Function Environment Settings
 nr_metric_endpoint = os.getenv('NR_METRIC_ENDPOINT', 'metric-api.newrelic.com')
 
 # nr_ingest_key is used for authentication to post metrics to a specific account
-# This is defined in the func.yaml file or on the OCI Function Environment Settings
-nr_ingest_key = os.getenv('NR_INGEST_KEY','not-configured')
+nr_ingest_key = os.getenv('NR_INGEST_KEY', 'not-configured')
 
 # forward_to_nr toggles if the function will send metrics to NR or not
-# This is defined in the func.yaml file or on the OCI Function Environment Settings
 forward_to_nr = eval(os.getenv('FORWARD_TO_NR', "True"))
 
-# Tags that will be added to the metric as attributes
-metric_tag_keys = os.getenv('METRICS_TAG_KEYS', 'name, namespace, displayName, resourceDisplayName, unit')
+# Tags that will be added to the metric as attributes (comma separated list of keys)
+metric_tag_keys = os.getenv('METRICS_TAG_KEYS', 'name, namespace, displayName, resourceDisplayName, resourceName, resourceID, region, unit')
 metric_tag_set = set()
 
 # Exception stack trace logging
 is_tracing = os.getenv('ENABLE_TRACING', "False")
 
 # Set all registered loggers to the configured log_level
-logging_level = os.getenv('LOGGING_LEVEL', 'INFO')
+logging_level = os.getenv('LOGGING_LEVEL', 'DEBUG')
 loggers = [logging.getLogger()] + [logging.getLogger(name) for name in logging.root.manager.loggerDict]
 [logger.setLevel(logging.getLevelName(logging_level)) for logger in loggers]
 
@@ -51,12 +49,16 @@ def handler(ctx, data: io.BytesIO = None):
         return
 
     try:
-        logging.getLogger().debug('function payload: %s',data.getvalue())
+        logging.getLogger().debug('function payload: %s', data.getvalue())
         metrics_list = json.loads(data.getvalue())
         logging.getLogger().info(preamble.format(ctx.FnName(), len(metrics_list), logging_level, forward_to_nr))
 
         converted_event_list = handle_metric_events(event_list=metrics_list)
-        send_to_nr(event_list=converted_event_list)
+        flattened_event_list = [evt for evt_list in converted_event_list for evt in evt_list]
+
+        logging.getLogger().debug('final payload: %s', json.dumps(flattened_event_list))
+
+        send_to_nr(event_list=flattened_event_list)
 
     except (Exception, ValueError) as ex:
         logging.getLogger().error('error handling logging payload: {}'.format(str(ex)))
@@ -74,7 +76,6 @@ def handle_metric_events(event_list):
     for event in event_list:
         single_result = transform_metric_to_nr_format(log_record=event)
         result_list.append(single_result)
-        logging.getLogger().debug(single_result)
 
     return result_list
 
@@ -199,7 +200,7 @@ def get_dictionary_value(dictionary: dict, target_key: str):
                         return target_value
 
 
-def send_to_nr (event_list):
+def send_to_nr(event_list):
     """
     Sends each transformed event to NR Endpoint.
     :param event_list: list of events in NR format
@@ -211,9 +212,7 @@ def send_to_nr (event_list):
 
     try:
         metric_client = MetricClient(nr_ingest_key, host=nr_metric_endpoint)
-        response = metric_client.send_batch(event_list[0])
-
-        logging.getLogger().debug('payload: %s', event_list[0])
+        response = metric_client.send_batch(event_list)
 
         if response.status != 202:
             logging.getLogger().error('Error posting to NR: {}'.format(str(response.status)))
@@ -263,16 +262,13 @@ def local_test_mode(filename):
 
     with open(filename, 'r') as f:
         data = f.read()
-        events = json.loads(data)
-        transformed_results = list()
+        metrics_list = json.loads(data)
+        converted_event_list = handle_metric_events(event_list=metrics_list)
+        flattened_event_list = [evt for evt_list in converted_event_list for evt in evt_list]
 
-        for event in events:
-            logging.getLogger().debug(json.dumps(event, indent=4))
-            transformed_result = transform_metric_to_nr_format(event)
-            transformed_results.append(transformed_result)
-
-        logging.getLogger().debug(json.dumps(transformed_results, indent=4))
-        send_to_nr(event_list=transformed_results)
+        logging.getLogger().debug(json.dumps(converted_event_list, indent=4))
+        logging.getLogger().debug(json.dumps(flattened_event_list, indent=4))
+        send_to_nr(event_list=flattened_event_list)
 
     logging.getLogger().info("local testing completed")
 
