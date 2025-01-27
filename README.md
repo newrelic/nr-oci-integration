@@ -17,7 +17,6 @@ This repository contains integrations to forward metrics or logs from Oracle Clo
 
 For convenience, Terraform configurations are supplied to create OCI Resource Manager (ORM) stacks. Each sub-section below outlines pre-requisites, steps, and resulting resources created for either metrics or logs ingestion.
 
-### Metrics
 
 #### Policy Stack
 
@@ -153,6 +152,37 @@ See [Metrics Stack](#metrics-stack) for installation/configuration details - The
 
 
 Once the stack is created and resources are generated successfully, navigate to the New Relic portal under *Logs* to view logs.
+
+## Additional Configuration
+
+After initial deployment/configuration, there are several connector/function settings that can be edited to control what data is collected and sent to New Relic, or for additional troubleshooting any function issues.
+
+### Service Connector
+
+Initially, the connector is created with default metric namespaces to collect metrics for. This can be configured by following the steps below:
+
+1. In the OCI Portal, under `Connectors`, select the newrelic metrics connector
+2. Select Edit
+3. Under `Configure Source -> Namespaces`, select or deselect specific namespaces of interest to collect metrics on.
+
+For details on specific metric namespaces and what metrics reside under each namespace, check Oracle's docs for a specific service/namespace. Examples:
+
+* [Compute](https://docs.oracle.com/en-us/iaas/Content/Compute/References/computemetrics.htm#Availabl)
+* [Database](https://docs.oracle.com/en/cloud/paas/base-database/available-metrics/index.html#articletitle)
+
+### Metrics Function
+
+The following table lists available environment variables that can be set for the function:
+
+| Input | Type | Required | Description
+| ----- | ---- | -------- | -----------
+| NR_METRIC_ENDPOINT | string | TRUE | The metric api endpoint to forward metrics to (EU or US). Default: `metric-api.newrelic.com`
+| NR_INGEST_KEY | string | TRUE | The Ingest (license) key for the account to forward metrics to.
+| FORWARD_TO_NR | string | False | Toggle forwarding to New Relic - Can be one of: `True,False`. Default: `True`
+| METRIC_TAG_KEYS | string | FALSE | Comma separated string of attributes to add as metadata to each metric. Default: `name, namespace, displayName, resourceDisplayName, resourceName, resourceID, region, unit`
+| ENABLE_TRACING | string | FALSE | Toggle function handler exception logging - Can be one of: `True,False`. Default: `True`
+| LOGGING_LEVEL | string | FALSE | The logging level for function logs emitted - Can be one of: `INFO,WARNING,ERROR,DEBUG`. Default: `INFO`
+
 
 ## Contributing
 

@@ -51,7 +51,7 @@ def add_nr_metadata(payload: dict):
     nr_metadata = {
       "instrumentation.name": "oci-log-reporter",
       "instrumentation.provider": "newrelic-labs",
-      "instrumentation.version": "0.0.2",
+      "instrumentation.version": "0.0.3",
       "collector.name": "nr-oci-integration"
     }
     payload["attributes"] = nr_metadata
