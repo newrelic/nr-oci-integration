@@ -4,11 +4,12 @@
 ![GitHub stars](https://img.shields.io/github/stars/newrelic/nr-oci-integration?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/newrelic/nr-oci-integration?style=social)
 
-# New Relic OCI Integrations
-
+# Archive Notice
 > **⚠️ Note: This repository has been archived and is now read-only.**
 
 **Please use the official [OCI solution here](https://docs.newrelic.com/docs/infrastructure/oci/introduction/)**
+
+# New Relic OCI Integrations
 
 This repository contains integrations to forward metrics or logs from Oracle Cloud Infrastructure (OCI).
 
